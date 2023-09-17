@@ -1,0 +1,153 @@
+{% extends "artax/layout.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Dashboard - ARTAX{% endblock %}
+{% block content %}
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div>
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <div class="col-lg-8">
+          <div class="row">
+
+            <div class="col-xxl-4 col-md-6" onclick="window.location.href='{% url 'all_books' %}'" style="cursor: pointer">
+              <div class="card info-card sales-card">
+                <div class="card-body">
+                  <h5 class="card-title">All records</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-book"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>View</h6>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-xxl-4 col-md-6" onclick="window.location.href='{% url 'new_book' %}'" style="cursor: pointer">
+              <div class="card info-card revenue-card">
+                <div class="card-body">
+                  <h5 class="card-title">New Record</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-plus-circle"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>New</h6>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-xxl-4 col-md-6" onclick="window.location.href='{% url 'book_queries' %}'" style="cursor: pointer">
+              <div class="card info-card customers-card">
+                <div class="card-body">
+                  <h5 class="card-title">Query by filters</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-funnel"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>Review</h6>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>More details</h6>
+                    </li>
+                    <li><a class="dropdown-item" href="{% url 'all_books' %}">All books</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                {% with latest_books.0 as book %}
+                  <h5 class="card-title">Recent <span>| {{ book.date_of_registration|timesince }} </span></h5>
+                {% endwith %}
+                  <table class="table datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Lang</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for book in latest_books %}
+                      <tr  class="clickable" onclick="window.location='{% url 'show_book' book_id=book.id %}'" style="cursor: pointer;">
+                        <th scope="row"><a href="{% url 'show_book' book_id=book.id %}">{{ book.lib_id }}</a></th>
+                        <td>{{ book.author.name }}</td>
+                        <td><a href="#" class="text-primary">{{ book.title }}</a></td>
+                        <td>{{ book.location.code }}</td>
+                        <td>{{ book.language.code }}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      {% if user.is_authenticated %}
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body">
+                {% with logs.0 as latest_log %}
+                  <h5 class="card-title">Recent Activity <span>| {{ latest_log.time|timesince }}</span></h5>
+                {% endwith %}
+
+              <div class="activity">
+                {% for item in logs %}
+                <div class="activity-item d-flex">
+                  <div class="activite-label me-1">{{ item.time|timesince }}</div>
+                  <i class='bi bi-circle-fill activity-badge {{ item.color }} align-self-start'></i>
+                  <div class="activity-content">
+                    {{ item.message }}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </section>
+
+  </main>
+{% endblock %}

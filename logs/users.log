@@ -1,0 +1,27 @@
+This is a test log message for the 'users' logger.
+User  (User ID: None) logged out on 2023-09-03 17:29:03.935150
+User marc (User ID: 1) logged on 2023-09-03 17:29:08.140210 with user-agent PC / Mac OS X 10.15.7 / Chrome 116.0.0
+This is a test log message for the 'users' logger.
+User marc (User ID: 1) logged out on 2023-09-03 17:30:39.471247
+User marc (User ID: 1) logged on 2023-09-03 17:30:43.140110 with user-agent PC / Mac OS X 10.15.7 / Chrome 116.0.0
+User marc (User ID: 1) logged on 2023-09-04 22:15:27.124898 with user-agent PC / Windows 10 / Edge 116.0.1938
+User marc (User ID: 1) logged on 2023-09-04 22:36:32.657035 with user-agent iPhone / iOS 16.6 / Mobile Safari 16.6
+User marc (User ID: 1) logged on 2023-09-05 08:41:34.905520 with user-agent PC / Mac OS X 10.15.7 / Chrome 116.0.0
+User marc (User ID: 1) logged on 2023-09-05 09:01:13.659982 with user-agent iPhone / iOS 17.0 / Mobile Safari 17.0
+User marc (User ID: 1) logged out on 2023-09-05 09:02:44.089652
+User marc (User ID: 1) logged on 2023-09-05 09:02:51.337294 with user-agent iPhone / iOS 17.0 / Mobile Safari 17.0
+User marc (User ID: 1) logged out on 2023-09-05 09:04:46.948364
+User test (User ID: 14) logged on 2023-09-05 09:06:36.425493 with user-agent iPhone / iOS 17.0 / Mobile Safari 17.0
+User marc (User ID: 1) logged on 2023-09-05 18:55:58.134781 with user-agent PC / Mac OS X 10.15.7 / Chrome 116.0.0
+User marc (User ID: 1) logged out on 2023-09-05 19:04:05.091940
+User marc (User ID: 1) logged on 2023-09-05 19:04:09.894745 with user-agent Nexus 5 / Android 6.0 / Chrome Mobile 116.0.0
+User marc (User ID: 1) logged on 2023-09-07 14:53:40.017531 with user-agent PC / Mac OS X 10.15.7 / Chrome 116.0.0
+User marc (User ID: 1) logged out on 2023-09-14 20:57:59.384762
+User marc (User ID: 1) logged on 2023-09-14 21:02:09.248924 with user-agent PC / Mac OS X 10.15.7 / Chrome 116.0.0
+User marc (User ID: 1) logged on 2023-09-14 21:10:46.940911 with user-agent PC / Mac OS X 10.15.7 / Chrome 116.0.0
+User marc (User ID: 1) logged on 2023-09-15 11:56:24.338354 with user-agent iPhone / iOS 17.0 / Mobile Safari 17.0
+User marc (User ID: 1) logged on 2023-09-15 11:59:50.277395 with user-agent PC / Mac OS X 10.15.7 / Chrome 116.0.0
+User marc (User ID: 1) logged on 2023-09-16 11:28:00.560375 with user-agent PC / Mac OS X 10.15.7 / Chrome 116.0.0
+User marc (User ID: 1) logged on 2023-09-17 13:24:56.414629 with user-agent iPhone / iOS 17.0 / Mobile Safari 17.0
+User marc (User ID: 1) logged out on 2023-09-17 13:33:41.646580
+User marc (User ID: 1) logged on 2023-09-17 13:39:19.702351 with user-agent iPhone / iOS 17.0 / Mobile Safari 17.0

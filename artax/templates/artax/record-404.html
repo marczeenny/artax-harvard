@@ -1,0 +1,24 @@
+{% extends "artax/layout.html" %}
+{% load static %}
+{% block title %}Not Found 404{% endblock %}
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block content %}
+  <main>
+    <div class="container">
+
+      <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+        <h1>404</h1>
+        <h2>The record you are looking for doesn't exist. Please check input or create one.</h2>
+        {% if param == "book" %}
+        <a class="btn" href="{%  url 'book_queries' %}">Back to query page</a>
+        {% elif param == "file" %}
+        <a class="btn" href="{% url 'file_queries' %}">Back to query page</a>
+        {% endif %}
+        <img src="{% static 'artax/img/not-found.svg' %}" class="img-fluid py-5" alt="Page Not Found">
+      </section>
+
+    </div>
+  </main>
+{% endblock %}

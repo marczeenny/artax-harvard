@@ -1,0 +1,152 @@
+{% extends 'artax/layout.html' %}
+{% block title %}Books{% endblock %}
+{% block content %}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Book Library</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url "index" %}">Dashboard</a></li>
+          <li class="breadcrumb-item active">Books</li>
+        </ol>
+      </nav>
+    </div>
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <h5 class="card-title">Books</h5>
+                </div>
+                <div class="col-6 text-end mt-3">
+                      <label class="form-check-label disabled" for="inlineFormSelect" hidden="hidden">
+                        Per page:
+                      </label>
+{#                    <form id="per_page_form" action="{% url 'change_per_page'%}" method="post">#}
+{#                    {% csrf_token %}#}
+{#                      <select id="inlineFormSelect" class="form-select-sm me-3" name="number">#}
+{#                          {% for option in per_page_options %}#}
+{#                              {% if option == per_page %}#}
+{#                                  <option value="{{ option }}" selected name="number">{{ option }}</option>#}
+{#                              {% else %}#}
+{#                                  <option value="{{ option }}" name="number">{{ option }}</option>#}
+{#                              {% endif %}#}
+{#                          {% endfor %}#}
+{#                      </select>#}
+{#                      <input type="submit" style="display: none;" id="submitButton">#}
+{#                    </form>#}
+                    <a href="{% url 'book_queries' %}" class="btn btn-success">Query Books</a>
+                </div>
+            </div>
+              <div class="table-responsive-sm table-responsive-md">
+                <table class="table table-hover datatable" >
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Section</th>
+                    <th scope="col">No Of Copies</th>
+                    <th scope="col">Location</th>
+{#                    <th scope="col">Publisher</th>#}
+                    <th scope="col">Publishing Date</th>
+{#                    <th scope="col">Purchase Date</th>#}
+                    <th scope="col">Special ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for book in page_obj %}
+                  <tr class="clickable" onclick="window.location='{% url 'show_book' book_id=book.id %}'" style="cursor: pointer;">
+                    <th scope="row">{{ book.id }}</th>
+                    <td>{{book.title}}</td>
+                    <td>{{book.author.name}}</td>
+                    <td>{{book.type.name}}</td>
+                    <td>{{book.section}}</td>
+                    <td>{{book.number_of_copies}}</td>
+                    <td>{{book.location.code}}</td>
+{#                    <td>{{book.publisher}}</td>#}
+                    <td>{{book.publishing_date}}</td>
+{#                    <td>{{book.purchase_date}}</td>#}
+                    <td>{{book.lib_id}}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        <div class="col-lg-9"></div>
+        <div class="col-lg-3">
+            <nav aria-label="Page navigation example float-right">
+                <ul class="pagination">
+                {% if page_obj.has_other_pages %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous%}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1" aria-label="First">
+                                        <span aria-hidden="true">&laquo;&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'3' %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                                        <span aria-hidden="true">&raquo;&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+                </ul>
+              </nav>
+          </div>
+      </div>
+    </section>
+  </main>
+{#    <script>#}
+{#    // Get references to the select element and the form#}
+    {#const selectElement = document.getElementById("inlineFormSelect");#}
+    {#const formElement = document.getElementById("per_page_form");#}
+    {#const submitButton = document.getElementById("submitButton");#}
+    {##}
+    {#// Add an event listener to detect changes in the select element#}
+    {#selectElement.addEventListener("change", function() {#}
+    {#    // Trigger the form submission when the select element changes#}
+    {#    formElement.submit();#}
+    {# ); #}
+{#</script>#}
+{% endblock %}
