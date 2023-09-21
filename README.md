@@ -21,7 +21,7 @@ The project itself is a Library Management System (LMS) for law firms. It handle
 5. Run `python manage.py runserver` to activate your development server. You can also run `python manage.py runserver --insecure` with `debug=False` to be able to view the custom-made 403, 404... error pages without the need to have a production server set up.
 6. Run `python manage.py createsuperuser` and follow the onscreen instructions to create a superuser. The latter will be needed to be able to access basic Artax needs.
 
-# Files and project modules
+# Files and project files
 ## Project Structure
 ```
 ├── artax
