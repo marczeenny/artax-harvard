@@ -149,11 +149,13 @@ def new_user(request):
 
             current_site = get_current_site(request)
             confirmation_link = f'{current_site.domain}/confirm/{uid}/{token}/'
+            artax_link = f'{current_site.domain}'
 
             subject = 'Confirm your email'
             message = render_to_string('artax/email_confirmation_email.html', {
                 'user': user,
                 'confirmation_link': confirmation_link,
+                'artax_link': artax_link,
             })
             send_mail(subject, message, "email.the.artax.network@gmail.com", [user.email], html_message=message)
             user.save()
