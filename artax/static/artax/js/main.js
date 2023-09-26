@@ -295,6 +295,7 @@
   const datatables = select('.datatable', true)
   datatables.forEach(datatable => {
     new simpleDatatables.DataTable(datatable, {
+      "perPage": 10,
       "perPageSelect": false,
       'searchable': false,
       'labels': {
@@ -330,8 +331,8 @@
         document.getElementById("image-form").submit();
       });
 
-    } else if (!document.getElementById("isSummary")) {
-
+    }
+    if (document.getElementById("isSummary")) {
       const selectFileButton = document.getElementById("select-file-button");
       const fileInput = document.getElementById("file-input");
 
@@ -342,7 +343,8 @@
       fileInput.addEventListener("change", () => {
         document.getElementById("file-form").submit();
       });
-    }
+    } else {
+  }
   }
 
   if (document.getElementById("book_query")) {
@@ -411,7 +413,6 @@
                 submitButton.disabled = true
             }
             else {
-                console.log(input)
                 input.classList.remove("is-invalid");
                 submitButton.disabled = false
             }
@@ -447,14 +448,12 @@
       })
       for (const elt of elements) {
         if (elt) {
-            console.log(elt)
             elt.addEventListener('click', (event) => {
                 event.preventDefault();
                 elt.href = window.location.href;
                 if (elt.href.indexOf('&page=') !== -1) {
                     elt.href = elt.href.slice(0, elt.href.indexOf('&page='));
                     elt.href += '&page=' + elt.dataset.page;
-                    console.log(elt.dataset.page)
                 } else {
                     elt.href += '&page=' + elt.dataset.page;
                 }

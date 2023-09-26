@@ -63,7 +63,6 @@ def index(request):
 
 
 def generate_qr_code(request, string_to_encode):
-    print(string_to_encode)
     qr = qrcode.QRCode(
         version=2,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -210,8 +209,8 @@ def profile(request):
         current_user.save()
         user_logger.info(
             f"User @{request.user.username} (User ID: {request.user.pk}) edited his profile on {datetime.now()}.")
-        user_logger.info(f"Old User: {serialize('json', request.user)}")
-        user_logger.info(f"New User: {serialize('json', current_user)}")
+        user_logger.info(f"Old User: {serialize('json', [request.user])}")
+        user_logger.info(f"New User: {serialize('json', [current_user])}")
 
     context = {}
     for user_group in request.user.groups.values_list('name', flat=True):
@@ -313,7 +312,7 @@ def change_book_cover(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     book_cover = request.FILES.get("bookCover")
     if request.method == 'POST' and book_cover and book.cover == "":
-        if book_cover.content_type != "image/png" and book_cover.content_type != "image/jpg" and book_cover.content_type != "image/jpeg":
+        if not book_cover.content_type.startswith("image/"):
             messages.warning(request, "File type for image cover invalid.")
             return redirect("show_book", book_id=book_id)
         book.cover = book_cover
@@ -351,7 +350,7 @@ def new_book(request):
                 if book_summary is not None and book_summary.content_type != "application/pdf":
                     messages.warning(request, "File type for summary invalid.")
                     return redirect("new_book")
-                if book_cover is not None and book_cover.content_type != "image/png" and book_cover.content_type != "image/jpg" and book_cover.content_type != "image/jpeg":
+                if book_cover is not None and not book_cover.content_type.startswith("image/"):
                     messages.warning(request, "File type for image cover invalid.")
                     return redirect("new_book")
 
@@ -379,6 +378,7 @@ def new_book(request):
                     new_book_record.save()
                     book_logger.info(f"ADD: @{request.user.username} created a new record: Book (ID={special_id}), "
                                      f'title "{request.POST.get("bookTitle")}"')
+                    new_book_record.purchase_date = None
                     book_logger.info(f"Record created: {serialize('json', [new_book_record])}")
 
                 except ValueError as error:
@@ -387,10 +387,13 @@ def new_book(request):
                 except ValidationError as error:
                     messages.warning(request, f"ValidationError: {error}")
                     return redirect("new_book")
-            return redirect("show_book", book_id=book_id)
+                except AttributeError as error:
+                    messages.warning(request, "Attribute error")
+                    messages.warning(request, f"{error}")
+            return redirect("show_book", book_id=Book.objects.all().last().id)
     return render(request, "artax/new-book.html", {"book_id": book_id, "types": types, "locations": locations,
                                                    "authors": authors, "languages": languages,
-                                                   "url_arg": f"{BASE_URL}books%2F{book_id}%2F"})
+                                                   "url_arg": f"books%2F{book_id}%2F"})
 
 
 @login_required
@@ -456,17 +459,25 @@ def query_books_by(request):
 @login_required(login_url="login")
 def show_book(request, book_id):
     book_record = get_object_or_404(Book, pk=book_id)
+    book_title = request.POST.get("title")
     types, authors, locations, languages = Type.objects.all(), Author.objects.all(), Location.objects.all(), Language.objects.all()
     if request.method == "POST":
         if not request.user.has_perm("artax.change_book"):
             raise PermissionDenied
+        target_book = Book.objects.filter(title=str(request.POST.get("title")).strip(" "))
+        if target_book.exists():
+            if target_book.first().pk != book_id:
+                messages.warning(request,
+                                 "Book with that title already exists. Please try again with another one or change "
+                                 "book section field.")
+                return redirect(show_book, book_id=book_id)
         book_author = Author.objects.get(pk=request.POST.get("author"))
         book_location = Location.objects.get(pk=request.POST.get("location"))
         book_language = Language.objects.get(pk=request.POST.get("language"))
         book_record.author = book_author
-        book_record.locations = book_location
+        book_record.location = book_location
         book_record.language = book_language
-        book_record.title = request.POST.get("title")
+        book_record.title = book_title
         book_record.subject = request.POST.get("subject")
         book_record.section = request.POST.get("section")
         book_record.publisher = request.POST.get("publisher")

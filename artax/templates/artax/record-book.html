@@ -5,21 +5,28 @@
     <main id="main" class="main">
         <a hidden="hidden" id="record-book"></a>
         <div class="pagetitle">
-            <h1>Book ID: {{ book.lib_id }} | {{ book.title }}</h1>
+            <h1>Book ID: <b>{{ book.lib_id }}</b> | {{ book.title }}</h1>
             <nav>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{% url 'index' %}">Dashboard</a></li>
                     <li class="breadcrumb-item"><a href="{% url 'all_books' %}">Books</a></li>
                     <li class="breadcrumb-item active">Book ID: {{ book.id }}</li>
                 </ol>
             </nav>
-        </div><!-- End Page Title -->
-
+        </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-octagon me-1"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
         <section class="section profile">
             <div class="row">
                 <div class="col-xl-9">
-
                     <div class="card">
                         <div class="card-body pt-3">
                             <!-- TODO ############################### Bordered Tabs ###########################3 -->
@@ -100,11 +107,6 @@
                                             </div>
                                         {% endif %}
                                     </div>
-                                    {% if messages %}
-                                        {% for message in messages %}
-                                            <p>{{ message }}</p>
-                                        {% endfor %}
-                                    {% endif %}
                                     <p class="small">{{ book.subject }}</p>
 
                                     <h5 class="card-title">Book Details</h5>
@@ -218,7 +220,7 @@
                                             <label for="title" class="col-md-4 col-lg-3 col-form-label">Title</label>
                                             <div class="col-md-8 col-lg-9">
                                                 <input name="title" type="text" class="form-control" id="title"
-                                                       value="{{ book.title }}">
+                                                       value="{{ book.title }}" required>
                                             </div>
                                         </div>
 
@@ -264,7 +266,7 @@
                                                 Copies</label>
                                             <div class="col-md-8 col-lg-9">
                                                 <input name="numberOfCopies" type="number" class="form-control"
-                                                       id="number_of_copies" value="{{ book.number_of_copies }}">
+                                                       id="number_of_copies" value="{{ book.number_of_copies }}" min="1">
                                             </div>
                                         </div>
 
@@ -324,17 +326,6 @@
                                                        id="publishing_date" value="{{ book.publishing_date }}">
                                             </div>
                                         </div>
-
-                                        <!--                                    <div class="row mb-3">-->
-                                        <!--                                        <label for="purchase_date" class="col-md-4 col-lg-3 col-form-label">Purchase-->
-                                        <!--                                            Date</label>-->
-                                        <!--                                        <div class="col-md-8 col-lg-9">-->
-                                        <!--                                            <input name="purchase_date" type="text" class="form-control"-->
-                                        <!--                                                   id="purchase_date"-->
-                                        <!--                                                   value="{{ book.purchase_date }}">-->
-                                        <!--                                        </div>-->
-                                        <!--                                    </div>-->
-
                                         <div class="row mb-3">
                                             <label for="isbn" class="col-md-4 col-lg-3 col-form-label">ISBN</label>
                                             <div class="col-md-8 col-lg-9">
@@ -349,7 +340,7 @@
                                                 Changes
                                             </button>
                                         </div>
-                                    </form><!-- End Profile Edit Form -->
+                                    </form>
 
                                 </div>
 
@@ -389,7 +380,6 @@
 
 
                                 <div class="tab-pane fade pt-3" id="delete-record">
-                                    <!-- Change Password Form -->
                                     <form method="post" action="{% url 'delete_book' book_id=book.id %}">
                                         {% csrf_token %}
                                         <h5>Are you sure you want to delete this record? You cannot recover the record
@@ -402,8 +392,6 @@
                                                     data-bs-target="#changePasswordModal">
                                                 Proceed
                                             </button>
-
-                                            <!-- Modal -->
                                             <div class="modal fade" id="changePasswordModal" tabindex="-1"
                                                  aria-labelledby="changePasswordLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg">
@@ -433,28 +421,24 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </form><!-- End Change Password Form -->
-
+                                    </form>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-lg-3">
                     <div class="card">
                         <img id="qr-code-img" src="{% url 'generate_qr_code' url_arg %}"
                              alt="QR Code">
-                        <!--                             onclick="window.location = '{# url 'generate_qr_code' book_id=book.id #}'"-->
                         <div class="card-body">
                             <h5 class="card-title text-center">Book QR Code</h5>
                             <p class="card-text text-center">To be used after submission of record.</p>
                             <div class="card-text text-center" id="HELLO">
                                 <a href="{% url 'download_qr_code' url_arg %}" style="margin-bottom: 10px;" class="btn btn-outline-secondary">Download QR Code</a><br>
-                                {% if book.summary == '' %}
-                                <p hidden="hidden" id="isCover"></p>
+                                {% if book.summary %}
+                                {% else %}
+                                <p hidden="hidden" id="isSummary"></p>
                                 <form id="file-form" method="POST" enctype="multipart/form-data" action="{% url 'change_book_summary' book_id=book.id %}">
                                     {% csrf_token %}
                                     <input type="hidden" name="book_id" value="{{ book.id }}">
@@ -471,34 +455,28 @@
     </main>
     <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // Get the initial form data when the page loads
     const form = document.querySelector('#edit-form');
     const initialFormData = new FormData(form);
     let initialFormJSON = JSON.stringify(Array.from(initialFormData));
-    const submitButton = form.querySelector("button[type=submit]")
-    submitButton.disabled = true
+    const numberOfCopies = form.querySelector("#number_of_copies");
+    const submitButton = form.querySelector("button[type=submit]");
+    submitButton.disabled = true;
 
     form.addEventListener("submit", event => {
         event.preventDefault();
-
-        // Get the current form data
         const currentFormData = new FormData(form);
         let currentFormJSON = JSON.stringify(Array.from(currentFormData));
-
-
-        // Compare with the initial form data
-        if (currentFormJSON !== initialFormJSON) {
-            form.removeEventListener("submit", preventResubmit);
+        if (currentFormJSON !== initialFormJSON && numberOfCopies.value >= 1) {
             form.submit();
         }
     });
     form.addEventListener('change', () => {
         const currentFormData = new FormData(form);
         let currentFormJSON = JSON.stringify(Array.from(currentFormData));
-        if (currentFormJSON === initialFormJSON) {
-            submitButton.disabled = true
+        if (currentFormJSON !== initialFormJSON) {
+            submitButton.disabled = numberOfCopies.value < 1;
         } else {
-            submitButton.disabled = false
+            submitButton.disabled = true
         }
     });
 });
