@@ -114,12 +114,12 @@ The project itself is a Library Management System (LMS) for law firms. It handle
 NB: Be sure to have `python` and `pip` installed to be able to run the web server.
 
 1. Unzip the project.
-2. In your terminal, `cd` into the zeennylawfirm-harvard directory.
+2. In your terminal, `cd` into the artax-harvard-main directory.
 3. Run `pip install -r requirements.txt` to install all python modules.
-4. Run `python manage.py makemigrations` auctions to make migrations for the auctions app. 
+4. Run `python manage.py makemigrations` auctions to make migrations for the artax app. 
 5. Run `python manage.py migrate` to apply migrations to your database.
 6. Run `python manage.py createsuperuser` and follow the onscreen instructions to create a superuser. The latter will be needed to be able to access basic Artax features.
-7. Run `python manage.py runserver` to activate your development server. You can also run `python manage.py runserver --insecure` with `debug=False` to be able to view the custom-made 403, 404... error pages without the need to have a production server set up.
+7. Run `python manage.py runserver` to activate your development server. You can also run `python manage.py runserver --insecure` with `debug=False` (in `settings.py`) to be able to view the custom-made 403, 404... error pages without the need to have a production server set up.
 
 
 ## Distinctiveness and Complexity
